@@ -1,3 +1,10 @@
+#include <iostream>
+#include <string>
+#include <chrono>
+#include "linkedList.h"
+
+using namespace std;
+
 //Implement a (singly or doubly) linked list that supports
 //the following methods.
 int main()
@@ -52,6 +59,14 @@ int main()
 	A.print(); //210 230 240 290 320 320 450 510 530 720 750 820
 
 
+
+
+
+
+
+
+
+	/*
 	//Add a methods to load your list from a file, and write your list to a file
 	linkedList<string> B;
 	linkedList<string> C;
@@ -79,6 +94,54 @@ int main()
 	//sort one at a time by timing the entire process
 	//of reading from the file, running the sorting algorithm,
 	//and writing the result to the ouptut file.
+	*/
+
+    // --------------------------------
+    // Slow Sort
+    // --------------------------------
+
+    cout << endl;
+    cout << "===== Slow Sort =====" << endl;
+
+    // Timing code
+    auto start = chrono::high_resolution_clock::now();
+
+    // Read from file
+    linkedList<string> B;
+    B.loadFromFile("whale.txt");
+
+    // Sort the list
+    B.slowSort();
+
+    // Write the sorted list to a file
+    B.writeToFile("slowSortedWhale.txt");
+
+    auto finish = chrono::high_resolution_clock::now();
+
+    chrono::duration<double> elapsed = finish - start;
+    cout << "Slow sort took: " << elapsed.count() << " seconds" << endl;
+
+
+// --------------------------------
+// Merge Sort
+// --------------------------------
+
+cout << endl;
+cout << "===== Merge Sort =====" << endl;
+
+start = chrono::high_resolution_clock::now();
+
+linkedList<string> C;
+C.loadFromFile("whale.txt");
+
+C.mergeSort();
+
+C.writeToFile("mergeSortedWhale.txt");
+
+finish = chrono::high_resolution_clock::now();
+
+elapsed = finish - start;
+cout << "Merge sort took: " << elapsed.count() << " seconds" << endl;
 
 	return 0;
 }

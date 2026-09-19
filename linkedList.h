@@ -146,13 +146,13 @@ public:
             current = current->next;
         }
 
-        / Delete the original list.
+        //Delete the original list.
         while(head != nullptr)
         {
-            // Save the next node before deleting the current node.
+            //Save the next node before deleting the current node.
             node *temp = head->next;
             delete head;
-            // Move head to the next node.
+            //Move head to the next node.
             head = temp;
         }
 
@@ -199,5 +199,145 @@ public:
         }
     }
 
+    //Combines two sorted linked lists into this linked list.
+    //left and right become empty after the merge.
+    //Runtime O(n) --> because every item is processed once.
+    void merge(linkedList<T> &left, linkedList<T> &right)
+    {
+        //Start at the beginning of the left list.
+        node *leftCurrent = left.head;
+        // Start at the beginning of the right list.
+        node *rightCurrent = right.head;
 
 
+        //Continue while both lists still contain items.
+        while(leftCurrent != nullptr && rightCurrent != nullptr)
+        {
+            //Check which current value is smaller.
+            if(leftCurrent->data <= rightCurrent->data)
+            {
+                //Add the smaller left value to this list.
+                push_back(leftCurrent->data);
+                //Move to the next node in the left list.
+                leftCurrent = leftCurrent->next;
+            }
+            else
+            {
+                //Add the smaller right value to this list.
+                push_back(rightCurrent->data);
+                //Move to the next node in the right list.
+                rightCurrent = rightCurrent->next;
+            }
+        }
+
+        //Add any remaining items from the left list.
+        while(leftCurrent != nullptr)
+        {
+            //Add the remaining left value.
+            push_back(leftCurrent->data);
+            //Move to the next left node.
+            leftCurrent = leftCurrent->next;
+        }
+
+        //Add any remaining items from the right list.
+        while(rightCurrent != nullptr)
+        {
+            //Add the remaining right value.
+            push_back(rightCurrent->data);
+            // Move to the next right node.
+            rightCurrent = rightCurrent->next;
+        }
+
+        //Delete left list.
+        while(left.head != nullptr)
+        {
+            //Save the next left node.
+            node *temp = left.head->next;
+            //delete old head assign the new head
+            delete left.head;
+            left.head = temp;
+        }
+        //Left is empty.
+        left.tail = nullptr;
+
+        //Delete right list
+        while(right.head != nullptr)
+        {
+            //Save the next right node.
+            node *temp = right.head->next;
+            //delete old head assign the new head            
+            delete right.head;
+            right.head = temp;
+        }
+        // Right is empty.
+        right.tail = nullptr;
+    }
+
+
+    //Sorts the list using merge sort.
+    //Uses split() to divide the list and merge() to combine the sorted halves.
+    //Runtime O(n log n) --> because we are using merge sort.
+    void mergeSort()
+    {
+        //zero or one node (already sorted)
+        if(head == nullptr || head->next == nullptr)
+        {
+           return;
+        }
+
+        //Creates left and right halves of the list.
+        linkedList<T> left;
+        linkedList<T> right;
+
+        //Split current list into left and right.
+        split(left, right);
+
+        //Recursively sort the left and right halves.
+        left.mergeSort();
+        right.mergeSort();
+
+        //Merge the two sorted halves back into this list.
+        merge(left, right);
+    }
+
+
+    //Will read items from a file and adds them to the linked list.
+    //Runtime O(n) --> because every item in the file is visited once.
+    void loadFromFile(string filename)
+    {
+        //Open the file to read it
+        ifstream input(filename);
+        //Variable used to store each item read from the file.
+        T item;
+
+        //Continue reading while there are items in the file.
+        while(input >> item)
+        {
+            push_back(item);   //Adds the item to the back of the linked list.
+
+        }
+        input.close();     // Close the input file.
+
+    }
+
+
+    //Writes every item in the linked list to a file.
+    //Runtime O(n) --> because every node must be visited.
+    void writeToFile(string filename)
+    {
+        //Open the output file.
+        ofstream output(filename);
+        //Start at the first node.
+        node *current = head;
+
+        //Continue until we reach the end of the list.
+        while(current != nullptr)
+        {
+            //Write the current item's data to the file.
+            output << current->data << endl;
+            current = current->next;   //Move to the next node.
+
+        }
+        output.close();     // Close the output file.
+    }
+};
